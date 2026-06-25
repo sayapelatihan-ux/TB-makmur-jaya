@@ -7,63 +7,75 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page-shell">
-    <header class="site-header">
+  <div class="app-shell">
+    <header class="topbar">
       <div class="brand">
-        <div class="logo">TB</div>
-        <div>
-          <h1>TB Makmur Jaya</h1>
-          <p>Toko Bangunan Online Terpercaya</p>
+        <div class="brand-mark">TB</div>
+        <div class="brand-info">
+          <span class="brand-name">TB Makmur Jaya</span>
+          <span class="brand-tag">Toko Bangunan Online</span>
         </div>
       </div>
-      <nav class="main-nav">
-        <button data-section="catalog">Produk</button>
-        <button data-section="cart">Keranjang</button>
-        <button data-section="transactions">Transaksi</button>
+      <nav class="topnav">
+        <button class="nav-button active" data-section="catalog">Produk</button>
+        <button class="nav-button" data-section="cart">Keranjang</button>
+        <button class="nav-button" data-section="transactions">Transaksi</button>
         <button id="authButton" class="auth-button">Login</button>
       </nav>
     </header>
 
-    <main>
+    <main class="main-content">
       <section class="hero-panel">
-        <div>
-          <h2>Selamat datang di TB Makmur Jaya</h2>
-          <p>Belanja bahan bangunan lengkap dengan ulasan, transaksi, keranjang, dan laporan kas.</p>
+        <div class="hero-content">
+          <div>
+            <p class="eyebrow">TB Makmur Jaya</p>
+            <h1>Belanja Bahan Bangunan yang Modern dan Mudah</h1>
+            <p class="hero-copy">Temukan produk bangunan lengkap dengan ulasan asli, pilihan pembayaran fleksibel, dan status pesanan transparan.</p>
+          </div>
+
+          <div class="hero-actions">
+            <label class="search-box">
+              <span class="search-label">Cari produk</span>
+              <input id="productSearch" type="search" placeholder="Cari semen, besi, cat, keramik..." autocomplete="off" />
+            </label>
+            <div class="hero-meta">
+              <div class="meta-chip">Bayar di Tempat</div>
+              <div class="meta-chip">PayLater</div>
+              <div class="meta-chip">Ulasan Real-Time</div>
+            </div>
+          </div>
         </div>
-        <div class="hero-actions">
-          <input id="productSearch" type="search" placeholder="Cari produk..." autocomplete="off" />
-          <div id="searchSuggestions" class="suggestions hidden"></div>
+
+        <div class="hero-stats">
+          <article class="stat-card">
+            <span class="stat-label">Produk</span>
+            <strong id="summaryProducts">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Ulasan</span>
+            <strong id="summaryReviews">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Transaksi</span>
+            <strong id="summaryTransactions">0</strong>
+          </article>
+          <article class="stat-card balance-card">
+            <span class="stat-label">Saldo Kas</span>
+            <strong id="summaryBalance">Rp 0</strong>
+          </article>
         </div>
       </section>
 
-      <section class="summary-panels">
-        <div class="summary-card">
-          <h3 id="summaryProducts">0</h3>
-          <p>Produk Tersedia</p>
-        </div>
-        <div class="summary-card">
-          <h3 id="summaryReviews">0</h3>
-          <p>Ulasan</p>
-        </div>
-        <div class="summary-card">
-          <h3 id="summaryTransactions">0</h3>
-          <p>Transaksi</p>
-        </div>
-        <div class="summary-card balance-card">
-          <h3 id="summaryBalance">Rp 0</h3>
-          <p>Saldo Kas</p>
-        </div>
-      </section>
-
-      <section id="catalogSection" class="panel active-panel">
+      <section id="catalogSection" class="panel">
         <div class="panel-header">
           <div>
-            <h2>Katalog Produk</h2>
-            <p>Pilih produk bangunan lengkap dengan foto, harga, dan ulasan.</p>
+            <p class="panel-tag">Katalog Produk</p>
+            <h2>Produk Bangunan Unggulan</h2>
+            <p>Pilih bahan bangunan terbaik dengan foto produk yang jelas dan ulasan terpercaya.</p>
           </div>
           <div class="panel-actions">
-            <button id="showRecommended">Rekomendasi Populer</button>
-            <button id="showAllProducts">Tampilkan Semua</button>
+            <button class="secondary-button" id="showRecommended">Rekomendasi Populer</button>
+            <button class="secondary-button" id="showAllProducts">Tampilkan Semua</button>
           </div>
         </div>
         <div id="productGrid" class="product-grid"></div>
@@ -71,10 +83,14 @@
 
       <section id="cartSection" class="panel hidden">
         <div class="panel-header">
-          <h2>Keranjang Belanja</h2>
-          <p>Periksa barang, ubah jumlah, lalu lakukan checkout.</p>
+          <div>
+            <p class="panel-tag">Keranjang</p>
+            <h2>Review & Checkout</h2>
+            <p>Periksa barang, pilih metode pembayaran, dan lanjutkan pembelian.</p>
+          </div>
         </div>
-        <div class="cart-wrapper">
+
+        <div class="cart-layout">
           <div class="cart-table-wrap">
             <table class="cart-table">
               <thead>
@@ -89,10 +105,17 @@
               <tbody id="cartItems"></tbody>
             </table>
           </div>
-          <div class="cart-summary">
-            <h3>Ringkasan Keranjang</h3>
-            <p>Total Item: <span id="cartCount">0</span></p>
-            <p>Total Harga: <strong id="cartTotal">Rp 0</strong></p>
+
+          <aside class="cart-summary-card">
+            <div>
+              <p class="summary-label">Total Item</p>
+              <strong id="cartCount">0</strong>
+            </div>
+            <div>
+              <p class="summary-label">Total Harga</p>
+              <strong id="cartTotal">Rp 0</strong>
+            </div>
+
             <div class="field-group">
               <label for="paymentMethod">Metode Pembayaran</label>
               <select id="paymentMethod">
@@ -100,49 +123,55 @@
                 <option value="paylater">PayLater</option>
               </select>
             </div>
-            <button id="checkoutButton" class="primary-button">Checkout</button>
-            <p class="info-note">Pilih metode pembayaran sebelum checkout.</p>
-          </div>
+            <button id="checkoutButton" class="primary-button">Checkout Sekarang</button>
+            <p class="info-note">Akun login wajib untuk melakukan checkout dan memantau pesanan.</p>
+          </aside>
         </div>
       </section>
 
       <section id="transactionsSection" class="panel hidden">
         <div class="panel-header">
-          <h2>Riwayat Transaksi & Kas</h2>
-          <p>Atur uang masuk, uang keluar, serta catatan penjualan.</p>
-        </div>
-        <div class="transaction-form card">
-          <h3>Tambah Transaksi Manual</h3>
-          <div class="field-group">
-            <label for="transactionType">Jenis Transaksi</label>
-            <select id="transactionType">
-              <option value="income">Uang Masuk</option>
-              <option value="expense">Uang Keluar</option>
-            </select>
+          <div>
+            <p class="panel-tag">Transaksi & Pesanan</p>
+            <h2>Riwayat Keuangan & Status Pesanan</h2>
+            <p>Kelola uang masuk, keluar, dan cek apakah pesanan sudah dikirim atau masih menunggu.</p>
           </div>
-          <div class="field-group">
-            <label for="transactionAmount">Jumlah (Rp)</label>
-            <input id="transactionAmount" type="number" min="1" placeholder="100000" />
-          </div>
-          <div class="field-group">
-            <label for="transactionNote">Keterangan</label>
-            <input id="transactionNote" type="text" placeholder="Contoh: Pembelian stok cat" />
-          </div>
-          <button id="addTransactionButton" class="primary-button">Simpan Transaksi</button>
         </div>
 
-        <div class="transaction-summary-panels">
-          <div class="summary-card">
-            <h3 id="incomeTotal">Rp 0</h3>
-            <p>Uang Masuk</p>
+        <div class="transaction-grid">
+          <div class="transaction-card">
+            <h3>Tambah Transaksi Manual</h3>
+            <div class="field-group">
+              <label for="transactionType">Jenis Transaksi</label>
+              <select id="transactionType">
+                <option value="income">Uang Masuk</option>
+                <option value="expense">Uang Keluar</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <label for="transactionAmount">Jumlah (Rp)</label>
+              <input id="transactionAmount" type="number" min="1" placeholder="100000" />
+            </div>
+            <div class="field-group">
+              <label for="transactionNote">Keterangan</label>
+              <input id="transactionNote" type="text" placeholder="Contoh: Pembelian stok cat" />
+            </div>
+            <button id="addTransactionButton" class="primary-button">Simpan Transaksi</button>
           </div>
-          <div class="summary-card">
-            <h3 id="expenseTotal">Rp 0</h3>
-            <p>Uang Keluar</p>
-          </div>
-          <div class="summary-card balance-card">
-            <h3 id="cashBalance">Rp 0</h3>
-            <p>Saldo Akhir</p>
+
+          <div class="transaction-summary-cards">
+            <article class="summary-card">
+              <span>Uang Masuk</span>
+              <strong id="incomeTotal">Rp 0</strong>
+            </article>
+            <article class="summary-card">
+              <span>Uang Keluar</span>
+              <strong id="expenseTotal">Rp 0</strong>
+            </article>
+            <article class="summary-card balance-card">
+              <span>Saldo Akhir</span>
+              <strong id="cashBalance">Rp 0</strong>
+            </article>
           </div>
         </div>
 
@@ -161,21 +190,27 @@
         </div>
 
         <div class="order-panel card">
-          <h3>Daftar Pesanan</h3>
-          <div class="order-summary-panels">
-            <div class="summary-card">
-              <h3 id="orderCount">0</h3>
-              <p>Total Pesanan</p>
+          <div class="order-panel-header">
+            <div>
+              <p class="panel-tag">Pesanan</p>
+              <h3>Status Pengiriman Pesanan</h3>
             </div>
-            <div class="summary-card">
-              <h3 id="orderPendingCount">0</h3>
-              <p>Belum Dikirim</p>
-            </div>
-            <div class="summary-card balance-card">
-              <h3 id="orderDeliveredCount">0</h3>
-              <p>Telah Dikirim</p>
+            <div class="order-statistics">
+              <div>
+                <span>Total Pesanan</span>
+                <strong id="orderCount">0</strong>
+              </div>
+              <div>
+                <span>Belum Dikirim</span>
+                <strong id="orderPendingCount">0</strong>
+              </div>
+              <div>
+                <span>Sudah Dikirim</span>
+                <strong id="orderDeliveredCount">0</strong>
+              </div>
             </div>
           </div>
+
           <div class="transaction-table-wrap">
             <table class="transaction-table">
               <thead>
@@ -204,7 +239,6 @@
   </div>
 
   <div id="toast" class="toast hidden"></div>
-
   <script src="app.js"></script>
 </body>
 </html>
