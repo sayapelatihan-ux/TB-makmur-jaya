@@ -93,8 +93,15 @@
             <h3>Ringkasan Keranjang</h3>
             <p>Total Item: <span id="cartCount">0</span></p>
             <p>Total Harga: <strong id="cartTotal">Rp 0</strong></p>
+            <div class="field-group">
+              <label for="paymentMethod">Metode Pembayaran</label>
+              <select id="paymentMethod">
+                <option value="cod">Bayar di Tempat (COD)</option>
+                <option value="paylater">PayLater</option>
+              </select>
+            </div>
             <button id="checkoutButton" class="primary-button">Checkout</button>
-            <p class="info-note">Login diperlukan untuk menyelesaikan transaksi.</p>
+            <p class="info-note">Pilih metode pembayaran sebelum checkout.</p>
           </div>
         </div>
       </section>
@@ -151,6 +158,39 @@
             </thead>
             <tbody id="transactionList"></tbody>
           </table>
+        </div>
+
+        <div class="order-panel card">
+          <h3>Daftar Pesanan</h3>
+          <div class="order-summary-panels">
+            <div class="summary-card">
+              <h3 id="orderCount">0</h3>
+              <p>Total Pesanan</p>
+            </div>
+            <div class="summary-card">
+              <h3 id="orderPendingCount">0</h3>
+              <p>Belum Dikirim</p>
+            </div>
+            <div class="summary-card balance-card">
+              <h3 id="orderDeliveredCount">0</h3>
+              <p>Telah Dikirim</p>
+            </div>
+          </div>
+          <div class="transaction-table-wrap">
+            <table class="transaction-table">
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>ID Pesanan</th>
+                  <th>Metode</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="ordersList"></tbody>
+            </table>
+          </div>
         </div>
       </section>
     </main>

@@ -87,11 +87,13 @@ const users = [
 const storageKeys = {
   cart: 'tbmj_cart',
   transactions: 'tbmj_transactions',
+  orders: 'tbmj_orders',
   user: 'tbmj_user'
 };
 
 let cart = loadCart();
 let transactions = loadTransactions();
+let orders = loadOrders();
 let currentUser = loadUser();
 let visibleProducts = [...products];
 
@@ -101,8 +103,13 @@ const elements = {
   cartItems: document.getElementById('cartItems'),
   cartCount: document.getElementById('cartCount'),
   cartTotal: document.getElementById('cartTotal'),
+  paymentMethod: document.getElementById('paymentMethod'),
   checkoutButton: document.getElementById('checkoutButton'),
   transactionList: document.getElementById('transactionList'),
+  ordersList: document.getElementById('ordersList'),
+  orderCount: document.getElementById('orderCount'),
+  orderPendingCount: document.getElementById('orderPendingCount'),
+  orderDeliveredCount: document.getElementById('orderDeliveredCount'),
   incomeTotal: document.getElementById('incomeTotal'),
   expenseTotal: document.getElementById('expenseTotal'),
   cashBalance: document.getElementById('cashBalance'),
@@ -170,6 +177,14 @@ function saveTransactions() {
   localStorage.setItem(storageKeys.transactions, JSON.stringify(transactions));
 }
 
+function loadOrders() {
+  return JSON.parse(localStorage.getItem(storageKeys.orders) || '[]');
+}
+
+function saveOrders() {
+  localStorage.setItem(storageKeys.orders, JSON.stringify(orders));
+}
+
 function loadUser() {
   return JSON.parse(localStorage.getItem(storageKeys.user) || 'null');
 }
@@ -183,6 +198,7 @@ function renderAll() {
   renderProducts();
   renderCart();
   renderTransactions();
+  renderOrders();
   renderSummary();
 }
 
@@ -364,6 +380,8 @@ function handleCheckout() {
     return;
   }
 
+  const paymentMethod = elements.paymentMethod.value;
+  const paymentLabel = paymentMethod === 'cod' ? 'Bayar di Tempat (COD)' : 'PayLater';
   const soldItems = cart.map((item) => {
     const product = products.find((p) => p.id === item.productId);
     product.stock = Math.max(product.stock - item.quantity, 0);
@@ -371,12 +389,33 @@ function handleCheckout() {
   });
 
   const total = soldItems.reduce((sum, item) => sum + item.subtotal, 0);
-  transactions.unshift({ date: new Date().toISOString(), type: 'income', amount: total, note: 'Penjualan barang', details: soldItems });
-  saveTransactions();
+  const orderId = `ORD-${Date.now()}`;
+  orders.unshift({
+    id: orderId,
+    date: new Date().toISOString(),
+    items: soldItems,
+    total,
+    paymentMethod,
+    status: 'Belum Dikirim',
+    note: paymentLabel
+  });
+  saveOrders();
+
+  if (paymentMethod === 'cod') {
+    transactions.unshift({
+      date: new Date().toISOString(),
+      type: 'income',
+      amount: total,
+      note: `Penjualan COD ${orderId}`,
+      details: soldItems
+    });
+    saveTransactions();
+  }
+
   cart = [];
   saveCart();
   renderAll();
-  showToast(`Checkout berhasil. Total pembayaran Rp ${numberFormat(total)}.`);
+  showToast(`Pesanan ${orderId} berhasil dibuat dengan metode ${paymentLabel}.`);
 }
 
 function renderTransactions() {
@@ -398,6 +437,49 @@ function renderTransactions() {
     elements.transactionList.appendChild(row);
   });
   updateTransactionSummary();
+}
+
+function renderOrders() {
+  elements.ordersList.innerHTML = '';
+  if (!orders.length) {
+    elements.ordersList.innerHTML = '<tr><td colspan="6">Belum ada pesanan.</td></tr>';
+    updateOrderSummary();
+    return;
+  }
+
+  orders.forEach((order) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${new Date(order.date).toLocaleString('id-ID')}</td>
+      <td>${order.id}</td>
+      <td>${order.paymentMethod === 'cod' ? 'COD' : 'PayLater'}</td>
+      <td>Rp ${numberFormat(order.total)}</td>
+      <td>${order.status}</td>
+      <td>${order.status === 'Belum Dikirim' ? `<button data-id="${order.id}" class="order-action-button">Tandai Dikirim</button>` : '<span>Sudah Dikirim</span>'}</td>
+    `;
+    if (order.status === 'Belum Dikirim') {
+      row.querySelector('.order-action-button').addEventListener('click', () => updateOrderStatus(order.id));
+    }
+    elements.ordersList.appendChild(row);
+  });
+  updateOrderSummary();
+}
+
+function updateOrderStatus(orderId) {
+  const order = orders.find((item) => item.id === orderId);
+  if (!order) return;
+  order.status = 'Sudah Dikirim';
+  saveOrders();
+  renderOrders();
+  showToast(`Pesanan ${orderId} sudah ditandai dikirim.`);
+}
+
+function updateOrderSummary() {
+  const pending = orders.filter((order) => order.status === 'Belum Dikirim').length;
+  const delivered = orders.filter((order) => order.status === 'Sudah Dikirim').length;
+  elements.orderCount.textContent = orders.length;
+  elements.orderPendingCount.textContent = pending;
+  elements.orderDeliveredCount.textContent = delivered;
 }
 
 function updateTransactionSummary() {
