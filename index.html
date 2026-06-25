@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TB Makmur Jaya - Toko Bangunan Online</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="brand">
+        <div class="logo">TB</div>
+        <div>
+          <h1>TB Makmur Jaya</h1>
+          <p>Toko Bangunan Online Terpercaya</p>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <button data-section="catalog">Produk</button>
+        <button data-section="cart">Keranjang</button>
+        <button data-section="transactions">Transaksi</button>
+        <button id="authButton" class="auth-button">Login</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-panel">
+        <div>
+          <h2>Selamat datang di TB Makmur Jaya</h2>
+          <p>Belanja bahan bangunan lengkap dengan ulasan, transaksi, keranjang, dan laporan kas.</p>
+        </div>
+        <div class="hero-actions">
+          <input id="productSearch" type="search" placeholder="Cari produk..." autocomplete="off" />
+          <div id="searchSuggestions" class="suggestions hidden"></div>
+        </div>
+      </section>
+
+      <section class="summary-panels">
+        <div class="summary-card">
+          <h3 id="summaryProducts">0</h3>
+          <p>Produk Tersedia</p>
+        </div>
+        <div class="summary-card">
+          <h3 id="summaryReviews">0</h3>
+          <p>Ulasan</p>
+        </div>
+        <div class="summary-card">
+          <h3 id="summaryTransactions">0</h3>
+          <p>Transaksi</p>
+        </div>
+        <div class="summary-card balance-card">
+          <h3 id="summaryBalance">Rp 0</h3>
+          <p>Saldo Kas</p>
+        </div>
+      </section>
+
+      <section id="catalogSection" class="panel active-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Katalog Produk</h2>
+            <p>Pilih produk bangunan lengkap dengan foto, harga, dan ulasan.</p>
+          </div>
+          <div class="panel-actions">
+            <button id="showRecommended">Rekomendasi Populer</button>
+            <button id="showAllProducts">Tampilkan Semua</button>
+          </div>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+      </section>
+
+      <section id="cartSection" class="panel hidden">
+        <div class="panel-header">
+          <h2>Keranjang Belanja</h2>
+          <p>Periksa barang, ubah jumlah, lalu lakukan checkout.</p>
+        </div>
+        <div class="cart-wrapper">
+          <div class="cart-table-wrap">
+            <table class="cart-table">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Harga</th>
+                  <th>Jumlah</th>
+                  <th>Subtotal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="cartItems"></tbody>
+            </table>
+          </div>
+          <div class="cart-summary">
+            <h3>Ringkasan Keranjang</h3>
+            <p>Total Item: <span id="cartCount">0</span></p>
+            <p>Total Harga: <strong id="cartTotal">Rp 0</strong></p>
+            <button id="checkoutButton" class="primary-button">Checkout</button>
+            <p class="info-note">Login diperlukan untuk menyelesaikan transaksi.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="transactionsSection" class="panel hidden">
+        <div class="panel-header">
+          <h2>Riwayat Transaksi & Kas</h2>
+          <p>Atur uang masuk, uang keluar, serta catatan penjualan.</p>
+        </div>
+        <div class="transaction-form card">
+          <h3>Tambah Transaksi Manual</h3>
+          <div class="field-group">
+            <label for="transactionType">Jenis Transaksi</label>
+            <select id="transactionType">
+              <option value="income">Uang Masuk</option>
+              <option value="expense">Uang Keluar</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="transactionAmount">Jumlah (Rp)</label>
+            <input id="transactionAmount" type="number" min="1" placeholder="100000" />
+          </div>
+          <div class="field-group">
+            <label for="transactionNote">Keterangan</label>
+            <input id="transactionNote" type="text" placeholder="Contoh: Pembelian stok cat" />
+          </div>
+          <button id="addTransactionButton" class="primary-button">Simpan Transaksi</button>
+        </div>
+
+        <div class="transaction-summary-panels">
+          <div class="summary-card">
+            <h3 id="incomeTotal">Rp 0</h3>
+            <p>Uang Masuk</p>
+          </div>
+          <div class="summary-card">
+            <h3 id="expenseTotal">Rp 0</h3>
+            <p>Uang Keluar</p>
+          </div>
+          <div class="summary-card balance-card">
+            <h3 id="cashBalance">Rp 0</h3>
+            <p>Saldo Akhir</p>
+          </div>
+        </div>
+
+        <div class="transaction-table-wrap">
+          <table class="transaction-table">
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Jenis</th>
+                <th>Jumlah</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+            <tbody id="transactionList"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="modalOverlay" class="modal hidden">
+    <div class="modal-card">
+      <button id="closeModal" class="close-button">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
